@@ -1,13 +1,13 @@
-var registerTask = require('../../lib/register-task');
-var getShipit    = require('../../lib/get-shipit');
-var Path         = require('path');
-var chalk        = require('chalk');
-var AWS          = require('aws-sdk');
-var Promise      = require('bluebird');
-var glob         = Promise.promisify(require('glob'));
-var read         = require('fs').readFileSync;
-var _            = require('lodash');
-var md5          = require('MD5');
+var fs = require('graceful-fs');
+var path = require('path');
+
+var aws = require('aws-sdk');
+var chalk = require('chalk');
+var glob = require('glob');
+var md5 = require('MD5');
+var mime = require('mime');
+var minimatch = require('minimatch');
+var Promise = require('bluebird');
 
 /**
  * Upload task.
