@@ -1,0 +1,46 @@
+{
+  "name": "shipit-aws",
+  "version": "1.0.0",
+  "description": "Shipit task to deploy assets on Amazon S3",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KrashStudio/shipit-aws.git"
+  },
+  "keywords": [
+    "shipit",
+    "deploy",
+    "task",
+    "S3",
+    "amazon"
+  ],
+  "author": "Mathieu Santostefano <mathieu@kontestapp.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KrashStudio/shipit-aws/issues"
+  },
+  "homepage": "https://github.com/KrashStudio/shipit-aws",
+  "devDependencies": {
+    "chai": "^1.10.0",
+    "mocha": "^2.1.0",
+    "rewire": "^2.1.4",
+    "shipit-cli": "^1.0.0",
+    "sinon": "^1.12.2",
+    "sinon-as-promised": "^2.0.3",
+    "sinon-chai": "^2.6.0"
+  },
+  "dependencies": {
+    "MD5": "^1.2.1",
+    "aws-sdk": "^2.1.8",
+    "bluebird": "^2.9.3",
+    "chalk": "^0.5.1",
+    "glob": "^4.3.5",
+    "lodash": "^3.0.1"
+  }
+}
