@@ -1,6 +1,6 @@
 {
   "name": "shipit-aws",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Shipit task to deploy assets on Amazon S3",
   "main": "index.js",
   "directories": {
@@ -27,12 +27,12 @@
   },
   "homepage": "https://github.com/KrashStudio/shipit-aws",
   "devDependencies": {
-    "chai": "^1.10.0",
+    "chai": "^3.0.0",
     "mocha": "^2.1.0",
     "rewire": "^2.1.4",
     "shipit-cli": "^1.0.0",
     "sinon": "^1.12.2",
-    "sinon-as-promised": "^2.0.3",
+    "sinon-as-promised": "^4.0.0",
     "sinon-chai": "^2.6.0"
   },
   "dependencies": {
@@ -46,7 +46,7 @@
     "mime": "^1.3.4",
     "multimatch": "^2.0.0",
     "gulp": "^3.8.10",
-    "gulp-replace": "^0.4.0",
-    "yargs": "^1.3.2"
+    "gulp-replace": "^0.5.3",
+    "yargs": "^3.12.0"
   }
 }
