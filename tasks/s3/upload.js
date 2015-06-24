@@ -28,7 +28,7 @@ module.exports = function (gruntOrShipit) {
 
     var shipit = getShipit(gruntOrShipit);
     var dirname = shipit.config.aws.syncParams.dirname;
-    var options = shipit.config.aws.syncParams.options;
+    var options = shipit.config.aws.syncParams.options || {};
 
     var s3 = new aws.S3(shipit.config.aws);
 
