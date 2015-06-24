@@ -18,28 +18,51 @@ describe('s3:upload task', function () {
     // Shipit config
     shipit.initConfig({
       test: {
-        awsConfig: {
-          "accessKeyId": "xxxxxxxxxxxxxxxxxxxx",
-          "secretAccessKey": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
-          "Bucket": "mybucket",
-          "ACL": "public-read",
-          "region": "eu-west-1",
-          "syncedFolders": [
-            "api/web/media/**/*.*"
-          ]
+        aws: {
+          accessKeyId: 'xxxxxxxxxxxxxxxxxxxx',
+          secretAccessKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+          region: 'eu-west-1',
+          params: {
+            ACL: 'public-read',
+            Bucket: 'tstbucket',
+            StorageClass: 'REDUCED_REDUNDANCY'
+          },
+          syncParams: {
+            dirname: 'web',
+            options: {
+              base: '.',
+              whitelist: ['js', 'css', 'images'],
+              blacklist: [
+                '**/*',
+                '!**/*.md',
+                '!**/*.log',
+                '!**/*.coffee',
+                '!**/*.map'
+              ]
+            }
+          }
         }
       }
     });
 
   });
 
-  it('should have an awsConfig object, contains Bucket and good-size accessKeyId and secretAccessKey', function (done) {
+  it('should have an aws object, contains Bucket and good-size accessKeyId and secretAccessKey', function (done) {
     shipit.start('s3:upload', function (err) {
       if (err) return done(err);
-      expect(shipit.config.awsConfig).to.be.an('object');
-      expect(shipit.config.awsConfig.accessKeyId).to.have.length(20);
-      expect(shipit.config.awsConfig.secretAccessKey).to.have.length(40);
-      expect(shipit.config.awsConfig.Bucket).to.exist();
+      expect(shipit.config.aws).to.be.an('object');
+      expect(shipit.config.aws.params.Bucket).to.be.a('string');
+      expect(shipit.config.aws.accessKeyId).to.have.length(20);
+      expect(shipit.config.aws.secretAccessKey).to.have.length(40);
+      done();
+    });
+  });
+
+  it('should have an aws.syncParams object, contains at least a dirname', function (done) {
+    shipit.start('s3:upload', function (err) {
+      if (err) return done(err);
+      expect(shipit.config.aws.syncParams).to.be.an('object');
+      expect(shipit.config.aws.syncParams.dirname).to.exist();
       done();
     });
   });
