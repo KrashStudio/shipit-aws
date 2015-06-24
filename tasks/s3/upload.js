@@ -87,12 +87,11 @@ module.exports = function (gruntOrShipit) {
             .catch(errored);
 
           function upload() {
-            return Promise.resolve();
-            // return put({
-            //   Body: contents,
-            //   ContentType: contentType,
-            //   Key: relpath
-            // });
+            return put({
+              Body: contents,
+              ContentType: contentType,
+              Key: relpath
+            });
           }
 
           function updated() {
