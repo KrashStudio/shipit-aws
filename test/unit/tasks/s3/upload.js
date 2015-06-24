@@ -3,48 +3,55 @@ require('sinon-as-promised');
 var expect = require('chai').use(require('sinon-chai')).expect;
 var Shipit = require('shipit-cli');
 var uploadFactory = require('../../../../tasks/s3/upload');
+var Promise = require('bluebird');
+var path = require('path');
+
+function createShipitInstance () {
+  var shipit = new Shipit({
+    environment: 'test',
+    log: sinon.stub()
+  });
+
+  uploadFactory(shipit);
+
+  // Shipit config
+  shipit.initConfig({
+    test: {
+      aws: {
+        accessKeyId: 'xxxxxxxxxxxxxxxxxxxx',
+        secretAccessKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+        region: 'eu-west-1',
+        params: {
+          ACL: 'public-read',
+          Bucket: 'testbucket',
+          StorageClass: 'REDUCED_REDUNDANCY'
+        },
+        syncParams: {
+          dirname: 'web',
+          options: {
+            base: '.',
+            whitelist: ['js', 'css', 'images'],
+            blacklist: [
+              '**/*',
+              '!**/*.md',
+              '!**/*.log',
+              '!**/*.coffee',
+              '!**/*.map'
+            ]
+          }
+        }
+      }
+    }
+  });
+
+  return shipit;
+}
 
 describe('s3:upload task', function () {
   var shipit;
 
   beforeEach(function () {
-    shipit = new Shipit({
-      environment: 'test',
-      log: sinon.stub()
-    });
-
-    uploadFactory(shipit);
-
-    // Shipit config
-    shipit.initConfig({
-      test: {
-        aws: {
-          accessKeyId: 'xxxxxxxxxxxxxxxxxxxx',
-          secretAccessKey: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-          region: 'eu-west-1',
-          params: {
-            ACL: 'public-read',
-            Bucket: 'tstbucket',
-            StorageClass: 'REDUCED_REDUNDANCY'
-          },
-          syncParams: {
-            dirname: 'web',
-            options: {
-              base: '.',
-              whitelist: ['js', 'css', 'images'],
-              blacklist: [
-                '**/*',
-                '!**/*.md',
-                '!**/*.log',
-                '!**/*.coffee',
-                '!**/*.map'
-              ]
-            }
-          }
-        }
-      }
-    });
-
+    shipit = createShipitInstance();
   });
 
   it('should have an aws object, contains Bucket and good-size accessKeyId and secretAccessKey', function (done) {
