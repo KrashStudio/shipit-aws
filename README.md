@@ -31,25 +31,25 @@ Configuration file
 `aws.json`
 ```json
 {
-  accessKeyId: 'ACCESS_KEY_ID',
-  secretAccessKey: 'SECRET_ACCESS_KEY',
-  region: 'REGION',
-  params: {
-    ACL: 'ACL',
-    Bucket: 'BUCKET_NAME',
-    StorageClass: 'REDUCED_REDUNDANCY'
+  "accessKeyId": "ACCESS_KEY_ID",
+  "secretAccessKey": "SECRET_ACCESS_KEY",
+  "region": "REGION",
+  "params": {
+    ACL: "ACL",
+    Bucket: "BUCKET_NAME",
+    StorageClass: "REDUCED_REDUNDANCY"
   },
-  syncParams: {
-    dirname: 'RELATIVE_PATH_OF_DIR_TO_BE_SYNC',
-    options: {
-      base: '.',
-      whitelist: ['js', 'css', 'images'],
-      blacklist: [
-        '**/*',
-        '!**/*.md',
-        '!**/*.log',
-        '!**/*.coffee',
-        '!**/*.map'
+  "syncParams": {
+    "dirname": "RELATIVE_PATH_OF_DIR_TO_BE_SYNC",
+    "options": {
+      "base": ".",
+      "whitelist": ["js", "css", "images"],
+      "blacklist": [
+        "**/*",
+        "!**/*.md",
+        "!**/*.log",
+        "!**/*.coffee",
+        "!**/*.map"
       ]
     }
   }
