@@ -59,7 +59,7 @@ describe('s3:upload task', function () {
   });
 
   it('should have an aws.syncParams object, contains at least a dirname', function (done) {
-    shipit.start.('s3.upload', function (err) {
+    shipit.start('s3.upload', function (err) {
       if (err) return done(err);
       expect(shipit.config.aws.syncParams).to.be.an('object');
       expect(shipit.config.aws.syncParams.dirname).to.exist();
