@@ -36,9 +36,9 @@ module.exports = function (gruntOrShipit) {
     var put = Promise.promisify(s3.putObject, s3);
 
     return sync(dirname, options)
-    .then(function () {
-      shipit.emit('synced');
-    });
+      .then(function () {
+        shipit.emit('synced');
+      });
 
     function sync(dirname, options) {
 
