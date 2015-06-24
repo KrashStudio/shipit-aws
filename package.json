@@ -1,6 +1,6 @@
 {
   "name": "shipit-aws",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Shipit task to deploy assets on Amazon S3",
   "main": "index.js",
   "directories": {
