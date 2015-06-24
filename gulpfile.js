@@ -9,7 +9,7 @@ gulp.task('bump', function () {
   gulp.src([
     'package.json'
   ])
-  .pipe(replace('"version": "' + info.version + '"', '"version": "' + args.v || args.version + '"'))
+  .pipe(replace('"version": "' + info.version, '"version": "' + args.v || args.version))
   .pipe(gulp.dest(function(file) {
     return file.base;
   }));
