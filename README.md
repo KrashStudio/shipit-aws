@@ -1,5 +1,3 @@
-#[WORK IN PROGRESS]
-
 # shipit-aws
 
 [![Build Status](https://travis-ci.org/KrashStudio/shipit-aws.svg?branch=master)](https://travis-ci.org/KrashStudio/shipit-aws)
