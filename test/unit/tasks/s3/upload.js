@@ -63,6 +63,7 @@ describe('s3:upload task', function () {
       if (err) return done(err);
       expect(shipit.config.aws.syncParams).to.be.an('object');
       expect(shipit.config.aws.syncParams.dirname).to.exist();
+      done();
     });
   });
 
