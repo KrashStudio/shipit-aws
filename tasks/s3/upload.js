@@ -57,13 +57,17 @@ module.exports = function (gruntOrShipit) {
       var pattern = path.join(absolute, '**', '*');
 
       return pglob(pattern, { nodir: true }).then(function (filepaths) {
-        var filtered = multimatch(filepaths, blacklist);
+        var relpaths = filepaths.map(function(filepath) {
+          return path.relative(base, filepath);
+        });
+        var filtered = multimatch(relpaths, blacklist);
         return Promise.all(filtered.map(syncFile));
       });
 
-      function syncFile(filepath) {
+      function syncFile(relpath) {
+        // Rebuild filepath with base for readFile
+        var filepath = path.join(base, relpath);
         return readFile(filepath).then(function (contents) {
-          var relpath = path.relative(options && options.base || '', filepath);
           var contentType = mime.lookup(filepath);
 
           return head({ Key: relpath })
