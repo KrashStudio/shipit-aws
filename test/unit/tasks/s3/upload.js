@@ -47,14 +47,22 @@ describe('s3:upload task', function () {
 
   });
 
-  it('should have an awsConfig object, contains Bucket and good-size accessKeyId and secretAccessKey', function (done) {
+  it('should have an aws object, contains Bucket and good-size accessKeyId and secretAccessKey', function (done) {
     shipit.start('s3:upload', function (err) {
       if (err) return done(err);
       expect(shipit.config.aws).to.be.an('object');
+      expect(shipit.config.aws.Bucket).to.exist();
       expect(shipit.config.aws.accessKeyId).to.have.length(20);
       expect(shipit.config.aws.secretAccessKey).to.have.length(40);
-      expect(shipit.config.aws.Bucket).to.exist();
       done();
+    });
+  });
+
+  it('should have an aws.syncParams object, contains at least a dirname', function (done) {
+    shipit.start.('s3.upload', function (err) {
+      if (err) return done(err);
+      expect(shipit.config.aws.syncParams).to.be.an('object');
+      expect(shipit.config.aws.syncParams.dirname).to.exist();
     });
   });
 
