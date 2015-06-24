@@ -44,7 +44,6 @@
     "graceful-fs": "^3.0.8",
     "lodash": "^3.0.1",
     "mime": "^1.3.4",
-    "minimatch": "^2.0.8",
     "multimatch": "^2.0.0"
   }
 }
