@@ -1,3 +1,6 @@
+var registerTask = require('../../lib/register-task');
+var getShipit = require('../../lib/get-shipit');
+
 var fs = require('graceful-fs');
 var path = require('path');
 
@@ -6,8 +9,12 @@ var chalk = require('chalk');
 var glob = require('glob');
 var md5 = require('MD5');
 var mime = require('mime');
-var minimatch = require('minimatch');
+var multimatch = require('multimatch');
 var Promise = require('bluebird');
+
+var noop = function () {};
+var pglob = Promise.promisify(glob);
+var readFile = Promise.promisify(fs.readFile);
 
 /**
  * Upload task.
@@ -18,137 +25,86 @@ module.exports = function (gruntOrShipit) {
   registerTask(gruntOrShipit, 's3:upload', task);
 
   function task() {
-    var shipit     = getShipit(gruntOrShipit);
-    var awsConfig  = shipit.config.awsConfig;
-    var S3         = new AWS.S3(awsConfig);
 
-    S3.headObject = Promise.promisify(S3.headObject);
-    S3.putObject  = Promise.promisify(S3.putObject);
+    var shipit = getShipit(gruntOrShipit);
+    var dirname = shipit.config.syncParams.dirname;
+    var options = shipit.config.syncParams.options;
 
-    var newFiles      = 0;
-    var updatedFiles  = 0;
-    var noChangeFiles = 0;
-    var errorFiles    = [];
+    var s3 = new aws.S3(shipit.config.aws);
 
-    return sync()
+    var head = Promise.promisify(s3.headObject, s3);
+    var put = Promise.promisify(s3.putObject, s3);
+
+    return sync(dirname, options)
     .then(function () {
-      shipit.emit('uploaded');
+      shipit.emit('synced');
     });
 
-    /**
-     * Upload your assets.
-     */
-    function sync() {
+    function sync(dirname, options) {
 
-      var syncedFolders = awsConfig.syncedFolders;
-      delete awsConfig.syncedFolders;
+      var base = options && options.base || '';
+      var absolute = path.join(base, dirname);
+      var blacklist = options && options.blacklist || [];
 
-      if (!awsConfig.Bucket) {
-        throw new Error(chalk.red('[Error] Bucket name is missing'));
+      if (options && options.whitelist) {
+        var promises = options.whitelist.map(function (subdirname) {
+          return sync(subdirname, { base: absolute, blacklist: blacklist });
+        });
+
+        return Promise.all(promises).then(noop);
       }
 
-      shipit.log('Uploading assets on ' + chalk.blue(awsConfig.Bucket) + ' bucket \n');
+      var pattern = path.join(absolute, '**', '*');
 
-      var globs = parseFolders(syncedFolders);
+      return pglob(pattern, { nodir: true }).then(function (filepaths) {
+        var filtered = multimatch(filepaths, blacklist);
+        return Promise.all(filtered.map(syncFile));
+      });
 
-      return Promise.all(globs).then(function(filenames) {
-        var flattenedFilenames = _.flattenDeep(filenames);
-        var files = _.map(readFiles(flattenedFilenames), function(file, index) {
-          var tempFilename = flattenedFilenames[index].replace('app/web/', '');
-          return sendToS3(file, tempFilename);
-        });
-        return Promise.all(files).then(function(res) {
-          shipit.log('\n');
-          shipit.log(chalk.green(newFiles + ' new files uploaded.'));
-          shipit.log(chalk.yellow(updatedFiles + ' files updated.\n'));
-          if (errorFiles.length) {
-            shipit.log(chalk.bgRed('Error on ' + errorFiles.length + ' : \n'));
-            _.each(errorFiles, function(errorFile) {
-              shipit.log(chalk.red(errorFile.filename) + ' : \n');
-              shipit.log(chalk.red(errorFile.stack) + '\n\n');
-            });
+      function syncFile(filepath) {
+        return readFile(filepath).then(function (contents) {
+          var relpath = path.relative(options && options.base || '', filepath);
+          var contentType = mime.lookup(filepath);
+
+          return head({ Key: relpath })
+            .then(function (headData) {
+              if (!headData) return upload().then(uploaded);
+
+              var hash = md5(contents);
+              var etag = JSON.parse(headData.ETag);
+              var sameContentType = contentType === headData.ContentType;
+
+              if (hash !== etag || !sameContentType) {
+                return upload().then(updated);
+              }
+            }, function () {
+              return upload().then(uploaded);
+            })
+            .catch(errored);
+
+          function upload() {
+            return Promise.resolve();
+            // return put({
+            //   Body: contents,
+            //   ContentType: contentType,
+            //   Key: relpath
+            // });
           }
 
-          return true;
+          function updated() {
+            shipit.log(chalk.yellow('Updated') + ' ' + relpath);
+          }
+
+          function uploaded() {
+            shipit.log(chalk.green('Uploaded') + ' ' + relpath);
+          }
+
+          function errored(err) {
+            shipit.log(chalk.red('Error uploading') + ' ' + relpath + ' ' + err.stack);
+          }
         });
-      });
-
-    }
-
-    function parseFolders(folders) {
-      var globs = _.map(folders, function(folder) {
-        return glob(folder);
-      });
-
-      return globs;
-    }
-
-    function readFiles(filenames) {
-      var files = _.map(filenames, function(filename, index) {
-        return read(filename);
-      });
-      return files;
-    }
-
-    function sendToS3(file, filename) {
-      var keyname = awsConfig.keyTransform(filename);
-      var awsObj = {
-        Bucket: awsConfig.Bucket,
-        Key:    keyname
-      };
-
-      if (_.isNull(file)) {
-        throw new Error(chalk.red('File ' + filename + ' is null'));
       }
-
-      var res = S3.headObject(awsObj).then(function(headData) {
-        var md5File = md5(file);
-        var ETag = headData.ETag.substring(1, headData.ETag.length - 1);
-
-        if (md5File == ETag) {
-          // object exists on S3 bucket AND is exactly the same as local
-          shipit.log(chalk.gray('No change : ') + awsObj.Key);
-          noChangeFiles++;
-          return Promise.resolve();
-        } else {
-          awsObj.Body = file;
-          return upload(awsObj, headData);
-        }
-
-      }, function(headErr) {
-        // object doesn't exist on S3 bucket
-        awsObj.Body = file;
-        return upload(awsObj);
-      });
-
-      return res;
-    }
-
-    function upload(awsObj, headData) {
-      return S3.putObject(awsObj).then(function(putData) {
-        if (headData && putData) {
-          // object exists on S3 bucket and need to be updated
-          if (headData.ETag !== putData.ETag) {
-            shipit.log(chalk.yellow('Updated : ') + awsObj.Key);
-          }
-          updatedFiles++;
-        } else {
-          // object doesn't exist on S3 bucket
-          shipit.log(chalk.green('Uploaded : ') + awsObj.Key);
-          newFiles++;
-        }
-
-        return Promise.resolve();
-      }, function(putErr) {
-        shipit.log(chalk.red('Error on uploading object ') + awsObj.Key);
-        errorFiles.push({
-          filename: filename,
-          stack: putErr.stack
-        });
-
-        return Promise.reject();
-      });
-    }
+    };
 
   }
 };
