@@ -2,8 +2,6 @@
 
 # shipit-aws
 
-[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/shipitjs/shipit?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
 [![Build Status](https://travis-ci.org/KrashStudio/shipit-aws.svg?branch=master)](https://travis-ci.org/KrashStudio/shipit-aws)
 [![Dependency Status](https://david-dm.org/KrashStudio/shipit-aws.svg?theme=shields.io)](https://david-dm.org/KrashStudio/shipit-aws)
 [![devDependency Status](https://david-dm.org/KrashStudio/shipit-aws/dev-status.svg?theme=shields.io)](https://david-dm.org/KrashStudio/shipit-aws#info=devDependencies)
