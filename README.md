@@ -4,9 +4,9 @@
 [![Dependency Status](https://david-dm.org/KrashStudio/shipit-aws.svg?theme=shields.io)](https://david-dm.org/KrashStudio/shipit-aws)
 [![devDependency Status](https://david-dm.org/KrashStudio/shipit-aws/dev-status.svg?theme=shields.io)](https://david-dm.org/KrashStudio/shipit-aws#info=devDependencies)
 
-[Shipit](https://github.com/shipitjs/shipit) task for interact with AWS
+[Shipit](https://github.com/shipitjs/shipit) task for interact with AWS s3
 
-s3 task is heavily based on [gulp-s3-upload](https://github.com/clineamb/gulp-s3-upload), thanks [@clineamb](https://github.com/clineamb/) for your work.
+s3 task is based on [gulp-s3-upload](https://github.com/clineamb/gulp-s3-upload), thanks [@clineamb](https://github.com/clineamb/) for your work.
 
 **Features:**
 
@@ -79,8 +79,8 @@ If you want to sync your S3 through CLI, you can execute:
 
 ## Todo
 
-+ [ ] Add support for other AWS services
 + [ ] Improve log rendering (make it customizable)
++ [ ] Add support for other AWS services
 
 ## License
 
