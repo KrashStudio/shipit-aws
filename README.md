@@ -38,11 +38,12 @@ Configuration file
     "StorageClass": "REDUCED_REDUNDANCY"
   },
   "syncParams": {
-    "dirname": "RELATIVE_PATH_OF_DIR_TO_BE_SYNC",
+    "dirname": "NAME_OF_THE_DIR_YOU_WANT_TO_SYNC",
     "options": {
-      "base": ".",
-      "whitelist": ["js", "css", "images"],
+      "base": "BASE_RELATIVE_PATH_OF_THE_DIR_YOU_WANT_TO_SYNC",
+      "whitelist": ["DIRNAMES", "OF", "YOUR", "ASSETS"],
       "blacklist": [
+        "RELATIVE_PATTERNS_OF_DIRS_YOU_DONT_WANT_TO_SYNC",
         "**/*",
         "!**/*.md",
         "!**/*.log",
@@ -76,12 +77,12 @@ module.exports = function (shipit) {
 
 If you want to sync your S3 through CLI, you can execute:
 
-`shipit YOUR_ENV s3`
+`$ shipit YOUR_ENV s3`
 
 ## Todo
 
-- [] Add support for other AWS services
-- [] Improve log rendering (make it customizable)
++ [ ] Add support for other AWS services
++ [ ] Improve log rendering (make it customizable)
 
 ## License
 
