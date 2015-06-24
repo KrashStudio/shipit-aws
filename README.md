@@ -77,7 +77,7 @@ module.exports = function (shipit) {
 
 If you want to sync your S3 through CLI, you can execute:
 
-`shipit YOUR_ENV s3`
+`$ shipit YOUR_ENV s3`
 
 ## Todo
 
