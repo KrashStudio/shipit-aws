@@ -1,6 +1,7 @@
 # shipit-aws
 
 [![Build Status](https://travis-ci.org/KrashStudio/shipit-aws.svg?branch=master)](https://travis-ci.org/KrashStudio/shipit-aws)
+[![Code Climate](https://codeclimate.com/repos/558bf8ede30ba05066000018/badges/57c373a9fdd25d99ca0f/gpa.svg)](https://codeclimate.com/repos/558bf8ede30ba05066000018/feed)
 [![Dependency Status](https://david-dm.org/KrashStudio/shipit-aws.svg?theme=shields.io)](https://david-dm.org/KrashStudio/shipit-aws)
 [![devDependency Status](https://david-dm.org/KrashStudio/shipit-aws/dev-status.svg?theme=shields.io)](https://david-dm.org/KrashStudio/shipit-aws#info=devDependencies)
 
