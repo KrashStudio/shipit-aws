@@ -83,6 +83,11 @@ If you want to sync your S3 through CLI, you can execute:
 + [ ] Improve log rendering (make it customizable)
 + [ ] Add support for other AWS services
 
+
+## Contributors
+
+- [welcoMattic](https://github.com/welcoMattic)
+
 ## License
 
 MIT
