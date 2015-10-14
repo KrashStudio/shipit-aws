@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "MD5": "^1.2.1",
-    "aws-sdk": "^2.1.8",
+    "aws-sdk": "^2.2.9",
     "bluebird": "^2.9.3",
     "chalk": "^1.0.0",
     "glob": "^5.0.10",
