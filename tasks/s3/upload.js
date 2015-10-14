@@ -81,8 +81,9 @@ module.exports = function (gruntOrShipit) {
               if (hash !== etag || !sameContentType) {
                 return upload().then(updated);
               }
-            }, function () {
-              return upload().then(uploaded);
+            }, function (err) {
+              if (err.code === 'NotFound') return upload().then(uploaded);
+              throw err;
             })
             .catch(errored);
 
@@ -103,7 +104,7 @@ module.exports = function (gruntOrShipit) {
           }
 
           function errored(err) {
-            shipit.log(chalk.red('Error uploading') + ' ' + relpath + ' ' + err.stack);
+            shipit.log(chalk.red(err.code) + ' ' + relpath + ' ' + err.stack);
           }
         });
       }
